@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Shirt Order Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #d9f7f8;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        legend {
+            font-weight: bold;
+            padding: 0 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="email"], input[type="number"], input[type="date"], select, textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        textarea {
+            resize: vertical;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .reset-btn {
+            background-color: #6c757d;
+        }
+        .reset-btn:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>T-Shirt Order Form</h1>
+        <form id="orderForm">
+            <fieldset>
+                <legend>T-Shirt Details</legend>
+                
+                <label for="tagline">Tagline on the Shirt:</label>
+                <input type="text" id="tagline" name="tagline" placeholder="Enter your tagline" required>
+                
+                <label for="color">Color:</label>
+                <select id="color" name="color" required>
+                    <option value="" disabled selected>Select a color</option>
+                    <option value="red">Red</option>
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>
+                    <option value="black">Black</option>
+                </select>
+                
+                <label for="size">Size:</label>
+                <select id="size" name="size" required>
+                    <option value="" disabled selected>Select a size</option>
+                    <option value="small">Small</option>
+                    <option value="medium">Medium</option>
+                    <option value="large">Large</option>
+                    <option value="xlarge">X-Large</option>
+                </select>
+                
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" min="1" max="100" value="1" required>
+                
+                <label for="deliveryDate">Delivery Date:</label>
+                <input type="date" id="deliveryDate" name="deliveryDate" required>
+            </fieldset>
+            
+            <fieldset>
+                <legend>Delivery Details</legend>
+                
+                <label for="name">Recipient's Name:</label>
+                <input type="text" id="name" name="name" placeholder="John Doe" required>
+                
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" placeholder="123 Main St, Apt 4B" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="example@example.com" required>
+                
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+            </fieldset>
+            
+            <label for="comments">Additional Comments:</label>
+            <textarea id="comments" name="comments" rows="4" placeholder="Any special instructions or comments"></textarea>
+            
+            <button type="submit">Submit Order</button>
+            <button type="reset" class="reset-btn">Reset Form</button>
+        </form>
+    </div>
+    <div id="receiptContainer" style="display:none; margin-top: 20px;">
+        <h1>Order Receipt</h1>
+        <p id="receiptContent"></p>
+    </div>
+    <script>
+        // JavaScript for validation and form submission
+        document.getElementById('orderForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            
+            // Validation
+            let tagline = document.getElementById('tagline').value;
+            let phone = document.getElementById('phone').value;
+            
+            if (tagline.length > 50) {
+                alert('Tagline should not exceed 50 characters.');
+                return;
+            }
+            
+            if (phone.length !== 12) {
+                alert('Phone number must be in the format 123-456-7890 and 12 characters long.');
+                return;
+            }
+            
+            // Process Order and Generate Receipt
+            const formData = new FormData(event.target);
+            const orderData = {};
+            formData.forEach((value, key) => {
+                orderData[key] = value;
+            });
+            
+            const receiptContent = `
+                <strong>Order Confirmation</strong><br>
+                Date: ${new Date().toLocaleDateString()}<br>
+                Tagline: ${orderData.tagline}<br>
+                Color: ${orderData.color}<br>
+                Size: ${orderData.size}<br>
+                Quantity: ${orderData.quantity}<br>
+                Delivery Date: ${orderData.deliveryDate}<br>
+                Name: ${orderData.name}<br>
+                Address: ${orderData.address}<br>
+                Email: ${orderData.email}<br>
+                Phone: ${orderData.phone}<br>
+                Comments: ${orderData.comments}<br>
+            `;
+            
+            document.getElementById('receiptContent').innerHTML = receiptContent;
+            document.getElementById('receiptContainer').style.display = 'block';
+            
+            // Creating and using a Person class
+            class Person {
+                constructor(name, address, email, phone) {
+                    this.name = name;
+                    this.address = address;
+                    this.email = email;
+                    this.phone = phone;
+                }
+                
+                getDetails() {
+                    return `Name: ${this.name}, Address: ${this.address}, Email: ${this.email}, Phone: ${this.phone}`;
+                }
+                
+                getDetailsArrow = () => `Name: ${this.name}, Address: ${this.address}, Email: ${this.email}, Phone: ${this.phone}`;
+            }
+            
+            const person = new Person(orderData.name, orderData.address, orderData.email, orderData.phone);
+            console.log(person.getDetails());
+            console.log(person.getDetailsArrow());
+            
+            // Creating and using a Student class that inherits from Person
+            class Student extends Person {
+                constructor(name, address, email, phone, rollNumber) {
+                    super(name, address, email, phone);
+                    this.rollNumber = rollNumber;
+                }
+                
+                getDetails() {
+                    return `${super.getDetails()}, Roll Number: ${this.rollNumber}`;
+                }
+            }
+            
+            try {
+                const rollNumber = 0; // Simulating erroneous data
+                if (rollNumber === 0) {
+                    throw new Error('Roll Number cannot be zero.');
+                }
+                
+                const student = new Student(orderData.name, orderData.address, orderData.email, orderData.phone, rollNumber);
+                console.log(student.getDetails());
+            } catch (error) {
+                console.error(error.message);
+            }
+        });
+    </script>
+</body>
+</html>
